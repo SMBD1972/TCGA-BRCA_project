@@ -6,3 +6,4 @@ GDCdata/
 .RData
 .Rproj.user/
 .DS_Store
+.RData*
