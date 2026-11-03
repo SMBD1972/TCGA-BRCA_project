@@ -104,3 +104,10 @@ p_box
 ggsave("figures/fig3_stage_bar.png",      p_stage, width = 6, height = 4, dpi = 300)
 ggsave("figures/fig4_age_hist.png",       p_age,   width = 6, height = 4, dpi = 300)
 ggsave("figures/fig5_esr1_by_er_box.png", p_box,   width = 6, height = 5, dpi = 300)
+
+
+analytic |>
+  filter(!is.na(er_ihc)) |>
+  mutate(discordant = (er_ihc == "Negative" & ESR1_log2 > 5) |
+           (er_ihc == "Positive" & ESR1_log2 < 3)) |>
+  count(er_ihc, discordant)
