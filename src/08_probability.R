@@ -159,3 +159,22 @@ c(n = nrow(dd), cov = cov(dd$age_years, dd$ESR1_log2))
 
 bayes <- p_H_given_A * p_A2 / p_H2
 c(bayes = bayes, direct = p_A_given_H)
+
+
+
+
+
+
+
+q <- quantile(x, c(0.25, 0.75))
+iqr <- IQR(x)
+c(lower = q[1] - 1.5 * iqr, upper = q[2] + 1.5 * iqr)
+sum(x < q[1] - 1.5 * iqr | x > q[2] + 1.5 * iqr)
+
+
+
+
+
+d3 <- analytic |> filter(!is.na(B))
+c(P_B_given_H    = mean(d3$B[d3$H]),
+  P_B_given_notH = mean(d3$B[!d3$H]))
