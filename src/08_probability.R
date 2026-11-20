@@ -64,3 +64,30 @@ c(P_B = p_B, P_B_given_A = p_B_given_A)
 expected <- outer(rowSums(tab_AB), colSums(tab_AB)) / n
 round(expected, 1)
 tab_AB
+
+
+
+d2 <- analytic |> filter(!is.na(A))
+n2 <- nrow(d2)
+n2
+
+tab_AH <- table(A = d2$A, H = d2$H)
+tab_AH
+
+p_A2  <- mean(d2$A)
+p_H2  <- mean(d2$H)
+p_AH  <- mean(d2$A & d2$H)
+
+c(P_A = p_A2, P_H = p_H2, P_A_and_H = p_AH)
+
+p_A_given_H    <- mean(d2$A[d2$H])
+p_A_given_notH <- mean(d2$A[!d2$H])
+p_H_given_A    <- mean(d2$H[d2$A])
+p_H_given_notA <- mean(d2$H[!d2$A])
+
+c(P_A_given_H = p_A_given_H,
+  P_A_given_notH = p_A_given_notH,
+  P_H_given_A = p_H_given_A,
+  P_H_given_notA = p_H_given_notA)
+
+c(P_AH_observed = p_AH, P_A_times_P_H = p_A2 * p_H2)
