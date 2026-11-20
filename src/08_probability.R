@@ -91,3 +91,49 @@ c(P_A_given_H = p_A_given_H,
   P_H_given_notA = p_H_given_notA)
 
 c(P_AH_observed = p_AH, P_A_times_P_H = p_A2 * p_H2)
+
+
+
+
+set.seed(1405)
+
+neg <- d2 |> filter(!A)
+m <- 30
+reps <- 2000
+p_neg <- mean(neg$H)
+
+counts <- replicate(reps, sum(sample(neg$H, m)))
+
+c(p = p_neg, mean_obs = mean(counts), var_obs = var(counts),
+  mean_binom = m * p_neg, var_binom = m * p_neg * (1 - p_neg))
+
+obs <- table(factor(counts, levels = 0:max(counts))) / reps
+theo <- dbinom(0:max(counts), m, p_neg)
+round(cbind(k = 0:max(counts), observed = as.numeric(obs), binomial = theo), 3)
+
+
+
+
+x <- analytic$ESR1_log2
+
+p_hist <- ggplot(analytic, aes(x = ESR1_log2)) +
+  geom_histogram(aes(y = after_stat(density)), bins = 40,
+                 fill = "steelblue", color = "white") +
+  stat_function(fun = dnorm,
+                args = list(mean = mean(x), sd = sd(x)),
+                color = "red", linewidth = 1) +
+  labs(title = "ESR1 expression with fitted normal curve",
+       x = "ESR1 expression, log2(TPM + 1)", y = "Density")
+
+p_qq <- ggplot(analytic, aes(sample = ESR1_log2)) +
+  stat_qq() + stat_qq_line(color = "red") +
+  labs(title = "Normal Q-Q plot of ESR1 expression",
+       x = "Theoretical quantiles", y = "Sample quantiles")
+
+p_hist
+p_qq
+
+ggsave("figures/fig6_esr1_hist_normal.png", p_hist, width = 6, height = 4, dpi = 300)
+ggsave("figures/fig7_esr1_qq.png", p_qq, width = 6, height = 4, dpi = 300)
+
+c(mean = mean(x), var = var(x), sd = sd(x), min = min(x), max = max(x))
