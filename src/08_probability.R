@@ -137,3 +137,25 @@ ggsave("figures/fig6_esr1_hist_normal.png", p_hist, width = 6, height = 4, dpi =
 ggsave("figures/fig7_esr1_qq.png", p_qq, width = 6, height = 4, dpi = 300)
 
 c(mean = mean(x), var = var(x), sd = sd(x), min = min(x), max = max(x))
+
+
+
+
+
+dd <- analytic |> filter(!is.na(age_years))
+
+p_sc <- ggplot(dd, aes(x = age_years, y = ESR1_log2)) +
+  geom_point(alpha = 0.4, size = 1) +
+  geom_smooth(method = "lm", se = FALSE, color = "red") +
+  labs(title = "ESR1 expression versus age at diagnosis",
+       x = "Age at diagnosis (years)",
+       y = "ESR1 expression, log2(TPM + 1)")
+p_sc
+
+ggsave("figures/fig8_esr1_vs_age.png", p_sc, width = 6, height = 4, dpi = 300)
+
+c(n = nrow(dd), cov = cov(dd$age_years, dd$ESR1_log2))
+
+
+bayes <- p_H_given_A * p_A2 / p_H2
+c(bayes = bayes, direct = p_A_given_H)
